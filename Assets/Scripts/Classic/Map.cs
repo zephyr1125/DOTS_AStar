@@ -64,9 +64,9 @@ namespace Classic
             int2[] neighbourIds =
             {
                 nodePos + new int2(-1, 0),
+                nodePos + new int2(0, 1),
                 nodePos + new int2(1, 0),
                 nodePos + new int2(0, -1),
-                nodePos + new int2(0, 1),
             };
             foreach (var neighbourId in neighbourIds)
             {

@@ -15,9 +15,12 @@ namespace Classic
             while (frontier.Count>0)
             {
                 var current = frontier.Dequeue();
+                if (current == goalNode) break;
+                
                 var neighbours = map.GetNeighbours(current);
-                foreach (var neighbour in neighbours)
+                for (var i = 0; i < neighbours.Length; i++)
                 {
+                    var neighbour = neighbours[i];
                     if (cameFrom.ContainsKey(neighbour)) continue;
                     frontier.Enqueue(neighbour);
                     cameFrom[neighbour] = current;
