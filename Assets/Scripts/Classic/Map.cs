@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -7,23 +8,53 @@ namespace Classic
 {
     public class Map : MonoBehaviour
     {
-        public PathFinding PathFinding;
+        public PathFinding pathFinding;
         
-        private Dictionary<int2, AStarNode> _map;
+        public Dictionary<int2, AStarNode> map;
+
+        public int2 mapSize;
+
+        public GameObject nodePrefab;
+
+        public AStarNode startNode;
 
         private void Start()
         {
-            _map = new Dictionary<int2, AStarNode>();
-            for (var i = 0; i < 9; i++)
+            map = new Dictionary<int2, AStarNode>();
+            foreach (var node in GetComponentsInChildren<AStarNode>())
             {
-                for (var j = 0; j < 9; j++)
+                map[node.Position] = node;
+                if (node.NodeType == AStarNode.AStarNodeType.Start)
                 {
-                    var pos = new int2(i, j);
-                    _map[pos] = new AStarNode(pos);
+                    startNode = node;
                 }
             }
+            Debug.Log(map);
+        }
+        
+        [Button]
+        public void Generate()
+        {
+            var childCount = transform.childCount;
+            for (var i = childCount-1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
             
-            PathFinding.Find(this, _map[new int2(2,3)]);
+            for (var i = 0; i < mapSize.x; i++)
+            {
+                for (var j = 0; j < mapSize.y; j++)
+                {
+                    var node = Instantiate(nodePrefab, new Vector3(i, j), Quaternion.identity, transform);
+                    node.GetComponent<AStarNode>().Init(i, j);
+                }
+            }
+        }
+
+        public AStarNode GetNode(int2 Pos)
+        {
+            if (!map.ContainsKey(Pos)) return null;
+            return map[Pos];
         }
 
         public AStarNode[] GetNeighbours(AStarNode node)
@@ -39,9 +70,9 @@ namespace Classic
             };
             foreach (var neighbourId in neighbourIds)
             {
-                if (_map.ContainsKey(neighbourId))
+                if (map.ContainsKey(neighbourId) && map[neighbourId].NodeType!=AStarNode.AStarNodeType.Obstacle)
                 {
-                    neighbours.Add(_map[neighbourId]);
+                    neighbours.Add(map[neighbourId]);
                 }
             }
 

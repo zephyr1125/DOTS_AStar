@@ -6,11 +6,11 @@ namespace Classic
 {
     public class PathFinding : MonoBehaviour
     {
-        public void Find(Map map, AStarNode startNode)
+        public AStarNode[] Find(Map map, AStarNode startNode, AStarNode goalNode)
         {
             var frontier = new Queue<AStarNode>();
             frontier.Enqueue(startNode);
-            var visited = new Dictionary<AStarNode, bool> {[startNode] = true};
+            var cameFrom = new Dictionary<AStarNode, AStarNode> {[startNode] = null};
 
             while (frontier.Count>0)
             {
@@ -18,13 +18,21 @@ namespace Classic
                 var neighbours = map.GetNeighbours(current);
                 foreach (var neighbour in neighbours)
                 {
-                    if (visited.ContainsKey(neighbour)) continue;
+                    if (cameFrom.ContainsKey(neighbour)) continue;
                     frontier.Enqueue(neighbour);
-                    visited[neighbour] = true;
+                    cameFrom[neighbour] = current;
                 }
             }
-            
-            Debug.Log(visited);
+
+            var node = goalNode;
+            var path = new List<AStarNode>();
+            while (node != startNode)
+            {
+                path.Add(node);
+                node = cameFrom[node];
+            }
+            path.Reverse();
+            return path.ToArray();
         }
     }
 }
