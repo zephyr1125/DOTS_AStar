@@ -1,22 +1,16 @@
 fileFormatVersion: 2
-guid: e4cbc7ae0828ddd4d916750a59a46163
+guid: 6b5fdb81a53440a41986775ad237a7fe
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8299472043383108796
-    second: node_empty
+      213: 8410645275410966515
+    second: path_start
   - first:
-      213: -3866902835573868859
-    second: node_obstacle
+      213: -3442669116030014721
+    second: path_goal
   - first:
-      213: 3459739938680114226
-    second: node_start
-  - first:
-      213: -760160556743895138
-    second: node_goal
-  - first:
-      213: -6016311745444271284
-    second: node_path
+      213: 5818536335156465157
+    second: path_route
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -101,7 +95,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: node_empty
+      name: path_start
       rect:
         serializedVersion: 2
         x: 0
@@ -115,14 +109,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f09238d2153495a4e9b067bd8372650a
-      internalID: 8299472043383108796
+      spriteID: b56f4179552d04f4591606816d4002be
+      internalID: 8410645275410966515
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: node_obstacle
+      name: path_goal
       rect:
         serializedVersion: 2
         x: 32
@@ -136,14 +130,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: af6017d6679fea045a089cef24a5f9ad
-      internalID: -3866902835573868859
+      spriteID: 79acd66ab2a47064588e7f73c6a75939
+      internalID: -3442669116030014721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: node_start
+      name: path_route
       rect:
         serializedVersion: 2
         x: 64
@@ -157,50 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 41a8d51588fe03c44b373493f22ce9c7
-      internalID: 3459739938680114226
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: node_goal
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3932ee1eb06fdb54a8e52700300e7372
-      internalID: -760160556743895138
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: node_path
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6d49e272758df2341ae85d2aff9c6c3c
-      internalID: -6016311745444271284
+      spriteID: 2dedd1b8dee68944ba7c4dcc851b78b4
+      internalID: 5818536335156465157
       vertices: []
       indices: 
       edges: []

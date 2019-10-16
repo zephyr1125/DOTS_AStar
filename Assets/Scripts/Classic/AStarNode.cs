@@ -8,31 +8,47 @@ namespace Classic
     [ExecuteInEditMode]
     public class AStarNode : MonoBehaviour
     {
-        public int2 Position;
+        public int2 position;
 
-        public enum AStarNodeType
+        public enum TerrainType
         {
-            Empty, Obstacle, Start, Goal, Path
+            Empty, Obstacle, Swamp
+        }
+        public static readonly int[] Costs = {1,int.MaxValue,2};
+
+        public Sprite[] terrainSprites;
+
+        [OnValueChanged("OnChangeTerrainType")]
+        public TerrainType terrainType;
+
+        public SpriteRenderer terrainRenderer;
+
+        public SpriteRenderer pathSpriteRender;
+
+        public Sprite[] pathSprites;
+        
+        public enum PathPart
+        {
+            None, Start, Route, Goal
         }
 
-        public Sprite[] Sprites;
+        [OnValueChanged("OnChangePathPart")]
+        public PathPart pathPart;
 
-        [OnValueChanged("OnChangeNodeType")]
-        public AStarNodeType NodeType;
-
-        private SpriteRenderer _spriteRenderer;
-        
         public void Init(int x, int y)
         {
-            Position = new int2(x, y);
-            NodeType = AStarNodeType.Empty;
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            position = new int2(x, y);
+            terrainType = TerrainType.Empty;
         }
 
-        public void OnChangeNodeType()
+        public void OnChangeTerrainType()
         {
-            if (_spriteRenderer == null) _spriteRenderer = GetComponent<SpriteRenderer>();
-            _spriteRenderer.sprite = Sprites[(int)NodeType];
+            terrainRenderer.sprite = terrainSprites[(int)terrainType];
+        }
+
+        public void OnChangePathPart()
+        {
+            pathSpriteRender.sprite = pathSprites[(int)pathPart];
         }
 
         private void OnMouseDown()

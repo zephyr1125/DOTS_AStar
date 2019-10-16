@@ -23,8 +23,8 @@ namespace Classic
             map = new Dictionary<int2, AStarNode>();
             foreach (var node in GetComponentsInChildren<AStarNode>())
             {
-                map[node.Position] = node;
-                if (node.NodeType == AStarNode.AStarNodeType.Start)
+                map[node.position] = node;
+                if (node.pathPart == AStarNode.PathPart.Start)
                 {
                     startNode = node;
                 }
@@ -60,7 +60,7 @@ namespace Classic
         public AStarNode[] GetNeighbours(AStarNode node)
         {
             var neighbours = new List<AStarNode>();
-            var nodePos = node.Position;
+            var nodePos = node.position;
             int2[] neighbourIds =
             {
                 nodePos + new int2(-1, 0),
@@ -70,7 +70,7 @@ namespace Classic
             };
             foreach (var neighbourId in neighbourIds)
             {
-                if (map.ContainsKey(neighbourId) && map[neighbourId].NodeType!=AStarNode.AStarNodeType.Obstacle)
+                if (map.ContainsKey(neighbourId) && map[neighbourId].terrainType!=AStarNode.TerrainType.Obstacle)
                 {
                     neighbours.Add(map[neighbourId]);
                 }

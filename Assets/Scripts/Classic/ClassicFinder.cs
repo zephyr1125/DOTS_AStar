@@ -22,18 +22,18 @@ namespace Classic
             var goalPos = _camera.ScreenToWorldPoint(Input.mousePosition)+new Vector3(0.5f, 0.5f);
             var newGoal = Map.GetNode(new int2((int)goalPos.x, (int)goalPos.y));
             if (newGoal != null && newGoal != _goalNode &&
-                newGoal.NodeType!=AStarNode.AStarNodeType.Start &&
-                newGoal.NodeType!=AStarNode.AStarNodeType.Obstacle)
+                newGoal.pathPart!=AStarNode.PathPart.Start &&
+                newGoal.terrainType!=AStarNode.TerrainType.Obstacle)
             {
                 if (_goalNode != null)
                 {
-                    _goalNode.NodeType = AStarNode.AStarNodeType.Empty;
-                    _goalNode.OnChangeNodeType();
+                    _goalNode.pathPart = AStarNode.PathPart.None;
+                    _goalNode.OnChangePathPart();
                 }
                 
                 _goalNode = newGoal;
-                _goalNode.NodeType = AStarNode.AStarNodeType.Goal;
-                _goalNode.OnChangeNodeType();
+                _goalNode.pathPart = AStarNode.PathPart.Goal;
+                _goalNode.OnChangePathPart();
                 
                 FindPath();
             }
@@ -46,22 +46,23 @@ namespace Classic
             var path = PathFinding.Find(Map, Map.startNode, _goalNode);
             foreach (var node in Map.map)
             {
-                switch (node.Value.NodeType)
+                if (node.Value.terrainType == AStarNode.TerrainType.Obstacle) continue;
+                
+                switch (node.Value.pathPart)
                 {
-                    case AStarNode.AStarNodeType.Start:
-                    case AStarNode.AStarNodeType.Obstacle:
-                    case AStarNode.AStarNodeType.Goal:
+                    case AStarNode.PathPart.Start:
+                    case AStarNode.PathPart.Goal:
                         continue;
                     default:
                         if (path.Contains(node.Value))
                         {
-                            node.Value.NodeType = AStarNode.AStarNodeType.Path;
+                            node.Value.pathPart = AStarNode.PathPart.Route;
                         }
                         else
                         {
-                            node.Value.NodeType = AStarNode.AStarNodeType.Empty;
+                            node.Value.pathPart = AStarNode.PathPart.None;
                         }
-                        node.Value.OnChangeNodeType();
+                        node.Value.OnChangePathPart();
                         break;
                 }
             }
