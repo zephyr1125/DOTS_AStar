@@ -10772,7 +10772,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de,
+  m_Sprite: {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10829,7 +10829,7 @@ MonoBehaviour:
   - {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: 7331438942712836324, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
-  terrainType: 0
+  terrainType: 1
   terrainRenderer: {fileID: 432039074}
   pathSpriteRender: {fileID: 736280560}
   pathSprites:
@@ -27008,7 +27008,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de,
+  m_Sprite: {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -27065,7 +27065,7 @@ MonoBehaviour:
   - {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: 7331438942712836324, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
-  terrainType: 1
+  terrainType: 0
   terrainRenderer: {fileID: 1231785577}
   pathSpriteRender: {fileID: 54009255}
   pathSprites:
@@ -27608,7 +27608,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de,
+  m_Sprite: {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -27665,7 +27665,7 @@ MonoBehaviour:
   - {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: 7331438942712836324, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
-  terrainType: 0
+  terrainType: 1
   terrainRenderer: {fileID: 1259028747}
   pathSpriteRender: {fileID: 1091363528}
   pathSprites:
@@ -37464,7 +37464,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de,
+  m_Sprite: {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -37521,7 +37521,7 @@ MonoBehaviour:
   - {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: 7331438942712836324, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
-  terrainType: 0
+  terrainType: 1
   terrainRenderer: {fileID: 1803627035}
   pathSpriteRender: {fileID: 87716027}
   pathSprites:
@@ -37964,7 +37964,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de,
+  m_Sprite: {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -38021,7 +38021,7 @@ MonoBehaviour:
   - {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: 7331438942712836324, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
-  terrainType: 0
+  terrainType: 1
   terrainRenderer: {fileID: 1812941558}
   pathSpriteRender: {fileID: 191124211}
   pathSprites:
@@ -41764,7 +41764,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de,
+  m_Sprite: {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -41821,7 +41821,7 @@ MonoBehaviour:
   - {fileID: 2160675821902375508, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: -9204815793914687161, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
   - {fileID: 7331438942712836324, guid: b3249db321cd3e64c9f5e4ca46d195de, type: 3}
-  terrainType: 0
+  terrainType: 1
   terrainRenderer: {fileID: 1993918515}
   pathSpriteRender: {fileID: 881715154}
   pathSprites:

@@ -29,7 +29,7 @@ namespace Classic
                     var neighbour = neighbours[i];
                     var newCost = costCount[current] + AStarNode.Costs[(int)neighbour.terrainType];
                     if (costCount.ContainsKey(neighbour) && costCount[neighbour]<=newCost) continue;
-                    frontier.Enqueue(neighbour, newCost);
+                    frontier.Enqueue(neighbour, newCost + Heuristic(neighbour, goalNode));
                     cameFrom[neighbour] = current;
                     costCount[neighbour] = newCost;
                     neighbour.costCount = newCost;
@@ -45,6 +45,11 @@ namespace Classic
             }
             path.Reverse();
             return path.ToArray();
+        }
+
+        private double Heuristic(AStarNode a, AStarNode b)
+        {
+            return Mathf.Abs(a.position.x - b.position.x) + Mathf.Abs(a.position.y - b.position.y);
         }
     }
 }
