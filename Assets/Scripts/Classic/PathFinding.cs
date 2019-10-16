@@ -8,9 +8,15 @@ namespace Classic
     {
         public AStarNode[] Find(Map map, AStarNode startNode, AStarNode goalNode)
         {
-            var frontier = new Queue<AStarNode>();
-            frontier.Enqueue(startNode);
+            foreach (var kv in map.map)
+            {
+                kv.Value.costCount = 0;
+            }
+            
+            var frontier = new PriorityQueue<AStarNode>();
+            frontier.Enqueue(startNode, 0);
             var cameFrom = new Dictionary<AStarNode, AStarNode> {[startNode] = null};
+            var costCount = new Dictionary<AStarNode, int> {[startNode] = 0};
 
             while (frontier.Count>0)
             {
@@ -21,9 +27,12 @@ namespace Classic
                 for (var i = 0; i < neighbours.Length; i++)
                 {
                     var neighbour = neighbours[i];
-                    if (cameFrom.ContainsKey(neighbour)) continue;
-                    frontier.Enqueue(neighbour);
+                    var newCost = costCount[current] + AStarNode.Costs[(int)neighbour.terrainType];
+                    if (costCount.ContainsKey(neighbour) && costCount[neighbour]<=newCost) continue;
+                    frontier.Enqueue(neighbour, newCost);
                     cameFrom[neighbour] = current;
+                    costCount[neighbour] = newCost;
+                    neighbour.costCount = newCost;
                 }
             }
 

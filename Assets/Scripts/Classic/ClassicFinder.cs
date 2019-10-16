@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Classic
 {
@@ -11,6 +12,7 @@ namespace Classic
         public PathFinding PathFinding;
         private AStarNode _goalNode;
         private Camera _camera;
+        public CostUI costUI;
 
         private void Awake()
         {
@@ -19,6 +21,8 @@ namespace Classic
 
         private void Update()
         {
+//            if (!Input.GetMouseButtonUp(0)) return;
+            
             var goalPos = _camera.ScreenToWorldPoint(Input.mousePosition)+new Vector3(0.5f, 0.5f);
             var newGoal = Map.GetNode(new int2((int)goalPos.x, (int)goalPos.y));
             if (newGoal != null && newGoal != _goalNode &&
@@ -30,11 +34,11 @@ namespace Classic
                     _goalNode.pathPart = AStarNode.PathPart.None;
                     _goalNode.OnChangePathPart();
                 }
-                
+                    
                 _goalNode = newGoal;
                 _goalNode.pathPart = AStarNode.PathPart.Goal;
                 _goalNode.OnChangePathPart();
-                
+                    
                 FindPath();
             }
         }
@@ -66,6 +70,7 @@ namespace Classic
                         break;
                 }
             }
+            costUI.UpdateCosts();
         }
     }
 }
