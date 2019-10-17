@@ -18,10 +18,6 @@ namespace Classic
             {
                 for (var i = 0; i < map.mapSize.x; i++)
                 {
-//                    sb.Append(i);
-//                    sb.Append(',');
-//                    sb.Append(j);
-//                    sb.Append('|');
                     var costString = String.Format("{0,6:D2}", map.map[new int2(i, j)].costCount);
                     sb.Append(costString);
                 }

@@ -27,7 +27,7 @@ namespace Classic
                 for (var i = 0; i < neighbours.Length; i++)
                 {
                     var neighbour = neighbours[i];
-                    var newCost = costCount[current] + AStarNode.Costs[(int)neighbour.terrainType];
+                    var newCost = costCount[current] + Const.TerrainCosts[(int)neighbour.terrainType];
                     if (costCount.ContainsKey(neighbour) && costCount[neighbour]<=newCost) continue;
                     frontier.Enqueue(neighbour, newCost + Heuristic(neighbour, goalNode));
                     cameFrom[neighbour] = current;

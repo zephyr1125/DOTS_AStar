@@ -26,17 +26,17 @@ namespace Classic
             var goalPos = _camera.ScreenToWorldPoint(Input.mousePosition)+new Vector3(0.5f, 0.5f);
             var newGoal = Map.GetNode(new int2((int)goalPos.x, (int)goalPos.y));
             if (newGoal != null && newGoal != _goalNode &&
-                newGoal.pathPart!=AStarNode.PathPart.Start &&
-                newGoal.terrainType!=AStarNode.TerrainType.Obstacle)
+                newGoal.pathPart!=PathPart.Start &&
+                newGoal.terrainType!=TerrainType.Obstacle)
             {
                 if (_goalNode != null)
                 {
-                    _goalNode.pathPart = AStarNode.PathPart.None;
+                    _goalNode.pathPart = PathPart.None;
                     _goalNode.OnChangePathPart();
                 }
                     
                 _goalNode = newGoal;
-                _goalNode.pathPart = AStarNode.PathPart.Goal;
+                _goalNode.pathPart = PathPart.Goal;
                 _goalNode.OnChangePathPart();
                     
                 FindPath();
@@ -50,21 +50,21 @@ namespace Classic
             var path = PathFinding.Find(Map, Map.startNode, _goalNode);
             foreach (var node in Map.map)
             {
-                if (node.Value.terrainType == AStarNode.TerrainType.Obstacle) continue;
+                if (node.Value.terrainType == TerrainType.Obstacle) continue;
                 
                 switch (node.Value.pathPart)
                 {
-                    case AStarNode.PathPart.Start:
-                    case AStarNode.PathPart.Goal:
+                    case PathPart.Start:
+                    case PathPart.Goal:
                         continue;
                     default:
                         if (path.Contains(node.Value))
                         {
-                            node.Value.pathPart = AStarNode.PathPart.Route;
+                            node.Value.pathPart = PathPart.Route;
                         }
                         else
                         {
-                            node.Value.pathPart = AStarNode.PathPart.None;
+                            node.Value.pathPart = PathPart.None;
                         }
                         node.Value.OnChangePathPart();
                         break;

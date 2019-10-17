@@ -24,7 +24,7 @@ namespace Classic
             foreach (var node in GetComponentsInChildren<AStarNode>())
             {
                 map[node.position] = node;
-                if (node.pathPart == AStarNode.PathPart.Start)
+                if (node.pathPart == PathPart.Start)
                 {
                     startNode = node;
                 }
@@ -70,7 +70,7 @@ namespace Classic
             };
             foreach (var neighbourId in neighbourIds)
             {
-                if (map.ContainsKey(neighbourId) && map[neighbourId].terrainType!=AStarNode.TerrainType.Obstacle)
+                if (map.ContainsKey(neighbourId) && map[neighbourId].terrainType!=TerrainType.Obstacle)
                 {
                     neighbours.Add(map[neighbourId]);
                 }

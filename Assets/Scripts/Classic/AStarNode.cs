@@ -10,17 +10,18 @@ namespace Classic
     public class AStarNode : MonoBehaviour
     {
         public int2 position;
-
-        public enum TerrainType
-        {
-            Empty, Obstacle, Swamp
-        }
-        public static readonly int[] Costs = {1,int.MaxValue,3};
-
-        public Sprite[] terrainSprites;
-
+        
         [OnValueChanged("OnChangeTerrainType")]
         public TerrainType terrainType;
+
+        [OnValueChanged("OnChangePathPart")]
+        public PathPart pathPart;
+
+        public int costCount;
+
+        #region Render
+
+        public Sprite[] terrainSprites;
 
         public SpriteRenderer terrainRenderer;
 
@@ -28,17 +29,10 @@ namespace Classic
 
         public Sprite[] pathSprites;
         
-        public enum PathPart
-        {
-            None, Start, Route, Goal
-        }
-
-        [OnValueChanged("OnChangePathPart")]
-        public PathPart pathPart;
-
-        public int costCount;
-        
         public Text text;
+
+        #endregion
+        
 
         public void Init(int x, int y)
         {
