@@ -7,15 +7,14 @@ using UnityEngine;
 namespace Classic
 {
     public class Map : MonoBehaviour
-    {
-        public PathFinding pathFinding;
-        
+    {        
         public Dictionary<int2, AStarNode> map;
 
         public int2 mapSize;
 
         public GameObject nodePrefab;
 
+        [HideInInspector]
         public AStarNode startNode;
 
         private void Start()

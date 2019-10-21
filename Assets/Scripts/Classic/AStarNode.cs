@@ -21,15 +21,13 @@ namespace Classic
 
         #region Render
 
-        public Sprite[] terrainSprites;
+        public Material[] terrainMaterials;
 
-        public SpriteRenderer terrainRenderer;
+        public MeshRenderer terrainRenderer;
 
-        public SpriteRenderer pathSpriteRender;
+        public Material[] pathMaterials;
 
-        public Sprite[] pathSprites;
-        
-        public Text text;
+        public MeshRenderer pathSpriteRender;
 
         #endregion
         
@@ -42,12 +40,12 @@ namespace Classic
 
         public void OnChangeTerrainType()
         {
-            terrainRenderer.sprite = terrainSprites[(int)terrainType];
+            terrainRenderer.material = terrainMaterials[(int)terrainType];
         }
 
         public void OnChangePathPart()
         {
-            pathSpriteRender.sprite = pathSprites[(int)pathPart];
+            pathSpriteRender.material = pathMaterials[(int)pathPart];
         }
 
         private void OnMouseDown()

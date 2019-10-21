@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ namespace Classic
 {
     public class CostUI : MonoBehaviour
     {
-        public Text text;
+        public TMP_Text text;
         public Map map;
 
         public void UpdateCosts()
@@ -20,6 +21,7 @@ namespace Classic
                 {
                     var costString = String.Format("{0,6:D2}", map.map[new int2(i, j)].costCount);
                     sb.Append(costString);
+                    if (i == map.mapSize.x - 1) sb.Append("\n");
                 }
             }
 
