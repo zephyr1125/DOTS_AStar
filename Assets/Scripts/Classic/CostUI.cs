@@ -15,13 +15,13 @@ namespace Classic
         public void UpdateCosts()
         {
             StringBuilder sb = new StringBuilder();
-            for (var j = map.mapSize.y - 1; j >= 0; j--)
+            for (var j = Const.MapHeight - 1; j >= 0; j--)
             {
-                for (var i = 0; i < map.mapSize.x; i++)
+                for (var i = 0; i < Const.MapWidth; i++)
                 {
                     var costString = String.Format("{0,6:D2}", map.map[new int2(i, j)].costCount);
                     sb.Append(costString);
-                    if (i == map.mapSize.x - 1) sb.Append("\n");
+                    if (i == Const.MapWidth - 1) sb.Append("\n");
                 }
             }
 

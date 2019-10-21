@@ -10,10 +10,8 @@ using UnityEditor;
 namespace Classic
 {
     public class Map : MonoBehaviour
-    {        
+    {
         public Dictionary<int2, AStarNode> map;
-
-        public int2 mapSize;
 
         public GameObject nodePrefab;
 
@@ -44,9 +42,9 @@ namespace Classic
                 DestroyImmediate(transform.GetChild(i).gameObject);
             }
             
-            for (var i = 0; i < mapSize.x; i++)
+            for (var i = 0; i < Const.MapWidth; i++)
             {
-                for (var j = 0; j < mapSize.y; j++)
+                for (var j = 0; j < Const.MapHeight; j++)
                 {
                     var node = PrefabUtility.InstantiatePrefab(nodePrefab, transform);
                     node.name = "node[" + i + "," + j + "]";
