@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Classic
 {
@@ -34,6 +37,7 @@ namespace Classic
         [Button]
         public void Generate()
         {
+#if UNITY_EDITOR
             var childCount = transform.childCount;
             for (var i = childCount-1; i >= 0; i--)
             {
@@ -44,10 +48,13 @@ namespace Classic
             {
                 for (var j = 0; j < mapSize.y; j++)
                 {
-                    var node = Instantiate(nodePrefab, new Vector3(i, j), Quaternion.identity, transform);
-                    node.GetComponent<AStarNode>().Init(i, j);
+                    var node = PrefabUtility.InstantiatePrefab(nodePrefab, transform);
+                    node.name = "node[" + i + "," + j + "]";
+                    ((GameObject)node).transform.position = new Vector3(i, j);
+                    ((GameObject)node).GetComponent<AStarNode>().Init(i, j);
                 }
             }
+#endif
         }
 
         public AStarNode GetNode(int2 Pos)

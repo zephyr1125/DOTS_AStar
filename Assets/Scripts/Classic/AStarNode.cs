@@ -17,6 +17,7 @@ namespace Classic
         [OnValueChanged("OnChangePathPart")]
         public PathPart pathPart;
 
+        [HideInInspector]
         public int costCount;
 
         #region Render
