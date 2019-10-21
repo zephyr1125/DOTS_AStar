@@ -19,7 +19,7 @@ namespace DOTS
         private Allocator m_AllocatorLabel;
  
         private int m_head;
-        private int m_length;
+        private int m_Length;
         private int m_MinIndex;
         private int m_MaxIndex;
  
@@ -48,7 +48,7 @@ namespace DOTS
             nativeMinHeap.m_MinIndex = 0;
             nativeMinHeap.m_MaxIndex = capacity - 1;
             nativeMinHeap.m_head = -1;
-            nativeMinHeap.m_length = 0;
+            nativeMinHeap.m_Length = 0;
  
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 #if UNITY_2018_3_OR_NEWER
@@ -72,22 +72,22 @@ namespace DOTS
         public void Push(MinHeapNode node)
         {
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
-            if (m_length == m_capacity)
+            if (m_Length == m_capacity)
                 throw new IndexOutOfRangeException($"Capacity Reached");
             AtomicSafetyHandle.CheckReadAndThrow(m_Safety);
 #endif
  
-            UnsafeUtility.WriteArrayElement(m_Buffer, m_length, node);
-            m_length += 1;
+            UnsafeUtility.WriteArrayElement(m_Buffer, m_Length, node);
+            m_Length += 1;
  
             if (m_head < 0)
             {
-                m_head = m_length - 1;
+                m_head = m_Length - 1;
             }
             else if (node.ExpectedCost < this[m_head].ExpectedCost)
             {
                 node.Next = m_head;
-                m_head = m_length - 1;
+                m_head = m_Length - 1;
             }
             else
             {
@@ -101,7 +101,7 @@ namespace DOTS
                 }
  
                 node.Next = current.Next;
-                current.Next = m_length - 1;
+                current.Next = m_Length - 1;
             }
         }
  
@@ -132,7 +132,7 @@ namespace DOTS
         public void Clear()
         {
             m_head = -1;
-            m_length = 0;
+            m_Length = 0;
         }
  
         public void Dispose()

@@ -29,7 +29,6 @@ namespace Classic
                     startNode = node;
                 }
             }
-            Debug.Log(map);
         }
         
         [Button]
