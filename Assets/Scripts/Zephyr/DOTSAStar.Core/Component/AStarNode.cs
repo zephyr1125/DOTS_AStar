@@ -2,7 +2,7 @@ using System;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace DOTS.Components
+namespace Zephyr.DOTSAStar.Core.Component
 {
     public struct AStarNode : IComponentData, IComparable<AStarNode>
     {

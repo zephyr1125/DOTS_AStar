@@ -1,11 +1,12 @@
 using Sirenix.OdinInspector;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Zephyr.DOTSAStar.Core;
 
-namespace Classic
+namespace Zephyr.DOTSAStar.Hybrid
 {
-    [ExecuteInEditMode]
-    public class AStarNode : MonoBehaviour
+    public class AStarNode : MonoBehaviour, IConvertGameObjectToEntity
     {
         public int2 position;
         
@@ -50,6 +51,17 @@ namespace Classic
         private void OnMouseDown()
         {
             Debug.Log("click");
+        }
+        
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        {
+            dstManager.AddComponentData(entity, new Core.Component.AStarNode
+            {
+                Position = position,
+                Cost = Const.TerrainCosts[(int)terrainType],
+                TerrainType = terrainType,
+                PathPart = pathPart
+            });
         }
     }
 }

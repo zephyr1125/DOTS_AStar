@@ -1,0 +1,19 @@
+{
+    "name": "Zephyr.DOTSAStar.Example",
+    "references": [
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:734d92eba21c94caba915361bd5ac177",
+        "GUID:8819f35a0fc84499b990e90a4ca1911f",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:f721aee3372edbf44a04ef8238d64f21",
+        "GUID:ec7d20f5e77332240ab96f83e0f42990"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

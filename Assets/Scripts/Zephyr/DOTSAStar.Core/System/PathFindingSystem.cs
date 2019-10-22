@@ -1,12 +1,13 @@
-using DOTS.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using AStarNode = DOTS.Components.AStarNode;
+using Zephyr.DOTSAStar.Core.Component;
+using Zephyr.DOTSAStar.Core.Lib;
+using AStarNode = Zephyr.DOTSAStar.Core.Component.AStarNode;
 
-namespace DOTS
+namespace Zephyr.DOTSAStar.Core.System
 {
     [UpdateBefore(typeof(PathFindingECBuffer))]
     public class PathFindingSystem : JobComponentSystem
@@ -15,7 +16,7 @@ namespace DOTS
         private PathFindingECBuffer _cmdBuffer;
         
         [BurstCompile]
-        private struct PrepareNodesJob : IJobForEachWithEntity<AStarNode>
+        private struct PrepareNodesJob : IJobForEachWithEntity<Component.AStarNode>
         {
             public NativeArray<AStarNode> AStarNodes;
             public void Execute(Entity entity, int index, [ReadOnly] ref AStarNode aStarNode)

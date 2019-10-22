@@ -1,11 +1,10 @@
-using System.Linq;
-using Classic;
-using DOTS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Zephyr.DOTSAStar.Core;
+using Zephyr.DOTSAStar.Core.Component;
 
-namespace DOTS
+namespace Zephyr.DOTSAStar.Example
 {
     public class DOTSFinder : MonoBehaviour
     {

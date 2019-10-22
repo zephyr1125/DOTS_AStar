@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace DOTS.Components
+namespace Zephyr.DOTSAStar.Core.Component
 {
     public struct PathRoute : IBufferElementData
     {
