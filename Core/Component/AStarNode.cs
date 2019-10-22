@@ -1,0 +1,18 @@
+using System;
+using Unity.Entities;
+using Unity.Mathematics;
+
+namespace Zephyr.DOTSAStar.Core.Component
+{
+    public struct AStarNode : IComponentData, IComparable<AStarNode>
+    {
+        public int2 Position;
+        public int Cost;
+        public TerrainType TerrainType;
+        public PathPart PathPart;
+        public int CompareTo(AStarNode other)
+        {
+            return Utils.PosToId(Position) - Utils.PosToId(other.Position);
+        }
+    }
+}
