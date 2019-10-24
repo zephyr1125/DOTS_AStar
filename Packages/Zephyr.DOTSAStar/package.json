@@ -6,7 +6,8 @@
   "unity": "2019.2",
   "dependencies": {
     "com.unity.entities": "0.1.1-preview",
-    "com.unity.burst": "1.1.2"
+    "com.unity.burst": "1.1.2",
+    "zephyr.define": "https://github.com/zephyr1125/ZephyrDefine.git#upm"
   },
   "author": {
     "name": "Zephyr Zhang",

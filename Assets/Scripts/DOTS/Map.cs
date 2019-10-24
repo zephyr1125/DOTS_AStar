@@ -1,14 +1,13 @@
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
-using Zephyr.DOTSAStar.Core;
 using Zephyr.DOTSAStar.Hybrid;
 
 #if UNITY_EDITOR
 
 #endif
 
-namespace Zephyr.DOTSAStar.Example
+namespace DOTS
 {
     public class Map : MonoBehaviour
     {

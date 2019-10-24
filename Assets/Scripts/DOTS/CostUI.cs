@@ -1,11 +1,8 @@
-using System;
 using System.Text;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
-using Zephyr.DOTSAStar.Core;
 
-namespace Zephyr.DOTSAStar.Example
+namespace DOTS
 {
     public class CostUI : MonoBehaviour
     {
