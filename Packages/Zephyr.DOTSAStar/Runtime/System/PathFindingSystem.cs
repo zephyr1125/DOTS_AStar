@@ -25,6 +25,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
             }
         }
 
+        [BurstCompile]
         private struct PathFindingJob : IJobForEachWithEntity<PathFindingRequest>
         {
             public int MapSize;
