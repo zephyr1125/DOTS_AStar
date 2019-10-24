@@ -1,13 +1,13 @@
+using Zephyr.DOTSAStar.Runtime.Component;
+using Zephyr.DOTSAStar.Runtime.Lib;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Zephyr.DOTSAStar.Core.Component;
-using Zephyr.DOTSAStar.Core.Lib;
-using AStarNode = Zephyr.DOTSAStar.Core.Component.AStarNode;
+using AStarNode = Zephyr.DOTSAStar.Runtime.Component.AStarNode;
 
-namespace Zephyr.DOTSAStar.Core.System
+namespace Zephyr.DOTSAStar.Runtime.System
 {
     [UpdateBefore(typeof(PathFindingECBuffer))]
     public class PathFindingSystem : JobComponentSystem

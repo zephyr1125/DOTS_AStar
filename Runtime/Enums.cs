@@ -1,4 +1,4 @@
-namespace Zephyr.DOTSAStar.Core
+namespace Zephyr.DOTSAStar.Runtime
 {
     public enum TerrainType
     {

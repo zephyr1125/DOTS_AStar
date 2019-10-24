@@ -1,0 +1,17 @@
+{
+    "name": "Zephyr.DOTSAStar.Editor",
+    "references": [
+        "GUID:d94b2daf4dcc4374c83b915e68dbc553",
+        "GUID:f721aee3372edbf44a04ef8238d64f21"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

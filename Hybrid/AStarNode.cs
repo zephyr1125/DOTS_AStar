@@ -1,8 +1,8 @@
+using Zephyr.DOTSAStar.Runtime;
 using Sirenix.OdinInspector;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using Zephyr.DOTSAStar.Core;
 
 namespace Zephyr.DOTSAStar.Hybrid
 {
@@ -55,7 +55,7 @@ namespace Zephyr.DOTSAStar.Hybrid
         
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            dstManager.AddComponentData(entity, new Core.Component.AStarNode
+            dstManager.AddComponentData(entity, new Runtime.Component.AStarNode
             {
                 Position = position,
                 Cost = Const.TerrainCosts[(int)terrainType],
