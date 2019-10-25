@@ -8,7 +8,6 @@ namespace Zephyr.DOTSAStar.Runtime.DefineComponent
     [InfoBox("Input name and cost, use -1 as cost means obstacle")]
     public class PathFindingNode : ComponentBase
     {
-        public string Name;
-        public float Cost;
+        public int Cost;
     }
 }
