@@ -22,17 +22,14 @@ namespace DOTS
 
         private void Update()
         {
-//            if (!Input.GetMouseButtonUp(0)) return;
+            if (!Input.GetMouseButtonUp(0)) return;
             
             var goalPos = _camera.ScreenToWorldPoint(Input.mousePosition)+new Vector3(0.5f, 0.5f);
             var newGoal = new int2((int)goalPos.x, (int)goalPos.y);
             if (IsPosInMap(newGoal) && !newGoal.Equals(_goalNode))
             {
                 _goalNode = newGoal;
-                for (int i = 0; i < 10; i++)
-                {
-                    FindPath();
-                }
+                FindPath();
             }
         }
 

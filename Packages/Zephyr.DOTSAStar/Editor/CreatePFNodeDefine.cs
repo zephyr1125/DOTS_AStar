@@ -15,8 +15,8 @@ namespace Zephyr.DOTSAStar.Editor
             define.AddComponent<PathFindingNode>();
 
             var path = GetSelectedPathOrFallback()+"/node_name.asset";
-            Assert.IsTrue(path.Contains("Resources"),
-                "Define files must be in Resources folder");
+            Assert.IsTrue(path.Contains("Resources/Defines/"),
+                "Define files must be in Resources/Defines/ folder");
             
             AssetDatabase.CreateAsset(define, path);
             Debug.Log($"Created A* Path Define at {path}");

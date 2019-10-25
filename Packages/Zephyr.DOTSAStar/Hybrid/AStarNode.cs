@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using Zephyr.DOTSAStar.Runtime;
 using Sirenix.OdinInspector;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Zephyr.Define.Runtime;
+using Zephyr.DOTSAStar.Runtime.DefineComponent;
 
 namespace Zephyr.DOTSAStar.Hybrid
 {
@@ -10,8 +13,8 @@ namespace Zephyr.DOTSAStar.Hybrid
     {
         public int2 position;
         
-        [OnValueChanged("OnChangeTerrainType")]
-        public TerrainType terrainType;
+        [ReadOnly]
+        public string nodeTypeName;
 
         [OnValueChanged("OnChangePathPart")]
         public PathPart pathPart;
@@ -19,11 +22,47 @@ namespace Zephyr.DOTSAStar.Hybrid
         [HideInInspector]
         public int costCount;
 
+#if UNITY_EDITOR
+        [AssetList(CustomFilterMethod = "CustomFilter")]
+        [OnValueChanged("UpdateNodeType")]
+        public Define.Runtime.Define NodeDefine;
+
+        private void UpdateNodeType()
+        {
+            nodeTypeName = NodeDefine.GetName();
+            nodeTypeRenderer.material = nodeTypeMaterials[nodeTypeName];
+        }
+        
+        protected virtual bool CustomFilter(Define.Runtime.Define define)
+        {
+            return define.GetComponent<PathFindingNode>()!=null;
+        }
+#endif
+        
         #region Render
 
-        public Material[] terrainMaterials;
+        [Button("更新NodeTypes")]
+        public void UpdateNodeTypes()
+        {
+            var nodeTypeDefines = DefineCenter.Instance().GetDefinesOf<PathFindingNode>();
+            
+            if(nodeTypeMaterials == null)
+                nodeTypeMaterials = new Dictionary<string, Material>(nodeTypeDefines.Length);
+            
+            foreach (var nodeTypeDefine in nodeTypeDefines)
+            {
+                if (!nodeTypeMaterials.ContainsKey(nodeTypeDefine.GetName()))
+                {
+                    nodeTypeMaterials.Add(nodeTypeDefine.GetName(), null);
+                }
+            }
+        }
+        
+        [ShowInInspector]
+        [InfoBox("增减NodeType后点击按钮刷新材质库")]
+        public Dictionary<string, Material> nodeTypeMaterials;
 
-        public MeshRenderer terrainRenderer;
+        public MeshRenderer nodeTypeRenderer;
 
         public Material[] pathMaterials;
 
@@ -31,16 +70,12 @@ namespace Zephyr.DOTSAStar.Hybrid
 
         #endregion
         
+        
 
         public void Init(int x, int y)
         {
             position = new int2(x, y);
-            terrainType = TerrainType.Empty;
-        }
-
-        public void OnChangeTerrainType()
-        {
-            terrainRenderer.material = terrainMaterials[(int)terrainType];
+            nodeTypeName = "empty";
         }
 
         public void OnChangePathPart()
@@ -55,12 +90,11 @@ namespace Zephyr.DOTSAStar.Hybrid
         
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
+            var define = DefineCenter.Instance().GetDefine(nodeTypeName).GetComponent<PathFindingNode>();
             dstManager.AddComponentData(entity, new Runtime.Component.AStarNode
             {
                 Position = position,
-                Cost = Const.TerrainCosts[(int)terrainType],
-                TerrainType = terrainType,
-                PathPart = pathPart
+                Cost = define.Cost
             });
         }
     }

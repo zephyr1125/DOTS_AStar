@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4132270378571391554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8257217900139764929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
 --- !u!114 &4971118543715477640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,33 +28,17 @@ MonoBehaviour:
   position:
     x: 0
     y: 0
-  terrainType: 0
+  nodeTypeName: empty
   pathPart: 0
   costCount: 0
-  terrainMaterials:
-  - {fileID: 2100000, guid: 988727eef239d324f8c5626663323c3f, type: 2}
-  - {fileID: 2100000, guid: 725ea2318d6291447ba8789ea07b6162, type: 2}
-  - {fileID: 2100000, guid: 35c73276abf4c9b44b5cbbd894b4b277, type: 2}
-  terrainRenderer: {fileID: 8257217900139764928}
+  NodeDefine: {fileID: 11400000, guid: 9a7125d523564c040a02de18a0ed2979, type: 2}
+  nodeTypeRenderer: {fileID: 8257217900139764928}
   pathMaterials:
   - {fileID: 2100000, guid: 5105cf542af90fe4699c74ab4b92cc02, type: 2}
   - {fileID: 2100000, guid: 11d8915a98586a54291eb3f851a6f20f, type: 2}
   - {fileID: 2100000, guid: 59aa5c53304fa7e44a0672700f65c653, type: 2}
   - {fileID: 2100000, guid: 3e85cbc11c543ca439d17e557dd84533, type: 2}
   pathSpriteRender: {fileID: 1019466828779001071}
---- !u!114 &4132270378571391554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8257217900139764929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
 --- !u!1001 &1976882861264848804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49,6 +46,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7636077002556709733, guid: 9bf85f278319e0e4898f5499213d089b,
+        type: 3}
+      propertyPath: m_Name
+      value: NodeDOTS
+      objectReference: {fileID: 0}
+    - target: {fileID: 7636077002556709732, guid: 9bf85f278319e0e4898f5499213d089b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 988727eef239d324f8c5626663323c3f, type: 2}
+    - target: {fileID: 7176217518655766886, guid: 9bf85f278319e0e4898f5499213d089b,
+        type: 3}
+      propertyPath: m_Name
+      value: PathView
+      objectReference: {fileID: 0}
     - target: {fileID: 7118367311624170504, guid: 9bf85f278319e0e4898f5499213d089b,
         type: 3}
       propertyPath: m_Name
@@ -108,16 +120,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7636077002556709733, guid: 9bf85f278319e0e4898f5499213d089b,
-        type: 3}
-      propertyPath: m_Name
-      value: NodeDOTS
-      objectReference: {fileID: 0}
-    - target: {fileID: 7176217518655766886, guid: 9bf85f278319e0e4898f5499213d089b,
-        type: 3}
-      propertyPath: m_Name
-      value: PathView
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7401692207961813472, guid: 9bf85f278319e0e4898f5499213d089b, type: 3}

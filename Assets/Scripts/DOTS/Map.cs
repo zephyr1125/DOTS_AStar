@@ -1,7 +1,9 @@
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using Zephyr.Define.Runtime;
 using Zephyr.DOTSAStar.Hybrid;
+using Zephyr.DOTSAStar.Runtime.DefineComponent;
 
 #if UNITY_EDITOR
 
@@ -25,6 +27,8 @@ namespace DOTS
             {
                 DestroyImmediate(transform.GetChild(i).gameObject);
             }
+
+            
             
             for (var i = 0; i < Const.MapWidth; i++)
             {

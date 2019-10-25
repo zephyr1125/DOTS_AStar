@@ -30,11 +30,8 @@ MonoBehaviour:
     - Name: 
       Entry: 7
       Data: 1|Zephyr.DOTSAStar.Runtime.DefineComponent.PathFindingNode, Zephyr.DOTSAStar.Runtime
-    - Name: Name
-      Entry: 1
-      Data: obstacle
     - Name: Cost
-      Entry: 4
+      Entry: 3
       Data: -1
     - Name: 
       Entry: 8

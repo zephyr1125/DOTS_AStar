@@ -101,8 +101,8 @@ namespace Zephyr.DOTSAStar.Runtime.System
                     {
                         var neighbourId = Utils.PosToId(neighbourPos);
                         
-                        //if obstacle, skip
-                        if (AStarNodes[neighbourId].TerrainType == TerrainType.Obstacle) continue;
+                        //if cost == -1 means obstacle, skip
+                        if (AStarNodes[neighbourId].Cost == -1) continue;
 
                         var currentCost = costCount[currentId] == int.MaxValue
                             ? 0

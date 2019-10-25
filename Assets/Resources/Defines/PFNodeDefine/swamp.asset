@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bac4da83fe64519a06afd3f7d7e81ce, type: 3}
-  m_Name: empty
+  m_Name: swamp
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -30,12 +30,9 @@ MonoBehaviour:
     - Name: 
       Entry: 7
       Data: 1|Zephyr.DOTSAStar.Runtime.DefineComponent.PathFindingNode, Zephyr.DOTSAStar.Runtime
-    - Name: Name
-      Entry: 1
-      Data: empty
     - Name: Cost
-      Entry: 4
-      Data: 1
+      Entry: 3
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
