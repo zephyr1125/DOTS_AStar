@@ -1,3 +1,4 @@
+using System;
 using Zephyr.DOTSAStar.Runtime.Component;
 using Zephyr.DOTSAStar.Runtime.Lib;
 using Unity.Burst;
@@ -14,6 +15,28 @@ namespace Zephyr.DOTSAStar.Runtime.System
     {
         private int _mapSize;
         private PathFindingECBuffer _cmdBuffer;
+
+        private struct OpenSetNode : IComparable<OpenSetNode>, IEquatable<OpenSetNode>
+        {
+            public int2 Position;
+            public float Priority;
+
+            public OpenSetNode(int2 position, float priority)
+            {
+                this.Position = position;
+                this.Priority = priority;
+            }
+            
+            public int CompareTo(OpenSetNode other)
+            {
+                return -Priority.CompareTo(other.Priority);
+            }
+
+            public bool Equals(OpenSetNode other)
+            {
+                return Position.Equals(other.Position);
+            }
+        }
         
         [BurstCompile]
         private struct PrepareNodesJob : IJobForEachWithEntity<Component.AStarNode>
@@ -37,6 +60,10 @@ namespace Zephyr.DOTSAStar.Runtime.System
             public NativeArray<int2> NeighboursOffset;
 
             public EntityCommandBuffer.Concurrent CmdBuffer;
+
+            public int IterationLimit;
+
+            public int StepsLimit;
             
             public void Execute(Entity entity, int index, ref PathFindingRequest request)
             {
@@ -56,11 +83,16 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 openSet.Push(new MinHeapNode(startPos, 0));
                 costCount[Utils.PosToId(startPos)] = 0;
 
-                while (openSet.HasNext())
+                var currentId = -1;
+                while (IterationLimit>0 && openSet.HasNext())
                 {
-                    var currentPos = openSet[openSet.Pop()].Position;
-                    var currentId = Utils.PosToId(currentPos);
-                    if (currentId == Utils.PosToId(goalPos)) break;
+                    var currentNode = openSet[openSet.Pop()];
+                    var currentPos = currentNode.Position;
+                    currentId = Utils.PosToId(currentPos);
+                    if (currentId == Utils.PosToId(goalPos))
+                    {
+                        break;
+                    }
                     
                     var neighboursPos = new NativeList<int2>(4, Allocator.Temp);
                     GetNeighbours(currentPos, ref neighboursPos, NeighboursOffset);
@@ -85,6 +117,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                         costCount[neighbourId] = newCost;
                     }
 
+                    IterationLimit--;
                     neighboursPos.Dispose();
                 }
                 
@@ -92,11 +125,35 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 var pathEntity = CmdBuffer.CreateEntity(index);
                 var buffer = CmdBuffer.AddBuffer<PathRoute>(index, pathEntity);
                 var nodePos = goalPos;
-                while (!nodePos.Equals(startPos))
+                while (StepsLimit>0 && !nodePos.Equals(startPos))
                 {
                     buffer.Add(new PathRoute {Position = nodePos});
                     nodePos = Utils.IdToPos(cameFrom[Utils.PosToId(nodePos)]);
+                    StepsLimit--;
                 }
+                
+                //Construct Result
+                var success = true;
+                var log = new NativeString64("Path finding success");
+                if (!openSet.HasNext() && currentId != Utils.PosToId(goalPos))
+                {
+                    success = false;
+                    log = new NativeString64("Out of openset");
+                }
+                if (IterationLimit <= 0 && currentId != Utils.PosToId(goalPos))
+                {
+                    success = false;
+                    log = new NativeString64("Iteration limit reached");
+                }else if (StepsLimit <= 0 && !nodePos.Equals(startPos))
+                {
+                    success = false;
+                    log = new NativeString64("Step limit reached");
+                }
+                CmdBuffer.AddComponent(index, pathEntity, new PathResult
+                {
+                    Success = success,
+                    Log = log
+                });
                 
                 //Remove request
                 CmdBuffer.DestroyEntity(index, entity);
@@ -120,7 +177,10 @@ namespace Zephyr.DOTSAStar.Runtime.System
 
             private static float Heuristic(int2 posA, int2 posB)
             {
-                return math.abs(posA.x - posB.x) + math.abs(posA.y - posB.y);
+                var x   = posB.x - posA.x;
+                var y   = posB.y - posA.y;
+                var sqr = x * x + y * y;
+                return sqr;
             }
         }
         
@@ -158,7 +218,9 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 MapSize = _mapSize,
                 AStarNodes = aStarNodes,
                 NeighboursOffset = neighbourOffset,
-                CmdBuffer = _cmdBuffer.CreateCommandBuffer().ToConcurrent()
+                CmdBuffer = _cmdBuffer.CreateCommandBuffer().ToConcurrent(),
+                IterationLimit = 2000,
+                StepsLimit = 1000
             };
             
             var pathFindingHandle = pathFindingJob.Schedule(this, sortNodesHandle);

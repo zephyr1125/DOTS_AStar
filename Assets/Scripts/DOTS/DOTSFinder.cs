@@ -29,7 +29,10 @@ namespace DOTS
             if (IsPosInMap(newGoal) && !newGoal.Equals(_goalNode))
             {
                 _goalNode = newGoal;
-                FindPath();
+                for (int i = 0; i < 10; i++)
+                {
+                    FindPath();
+                }
             }
         }
 
