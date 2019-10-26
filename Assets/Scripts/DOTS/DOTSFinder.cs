@@ -1,7 +1,9 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 using Zephyr.DOTSAStar.Runtime.Component;
+using Utils = Zephyr.DOTSAStar.Runtime.Utils;
 
 namespace DOTS
 {
@@ -46,9 +48,9 @@ namespace DOTS
             _entityManager.SetName(requestEntity, "pf[0,0]->["+_goalNode.x+","+_goalNode.y+"]");
             _entityManager.AddComponentData(requestEntity, new PathFindingRequest
             {
-                GoalPos = _goalNode,
+                GoalId = Utils.PosToId(_goalNode),
                 //todo temperate set fix position
-                StartPos = new int2(0,9)
+                StartId = Utils.PosToId(new int2(0,9))
             });
         }
     }

@@ -1,8 +1,10 @@
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using Zephyr.Define.Runtime;
 using Zephyr.DOTSAStar.Hybrid;
+using Zephyr.DOTSAStar.Runtime;
 using Zephyr.DOTSAStar.Runtime.DefineComponent;
 
 #if UNITY_EDITOR
@@ -37,7 +39,7 @@ namespace DOTS
                     var node = PrefabUtility.InstantiatePrefab(nodePrefab, transform);
                     node.name = "node[" + i + "," + j + "]";
                     ((GameObject)node).transform.position = new Vector3(i, j);
-                    ((GameObject)node).GetComponent<AStarNode>().Init(i, j);
+                    ((GameObject)node).GetComponent<AStarNode>().Init(Utils.PosToId(new int2(i, j)));
                 }
             }
 #endif

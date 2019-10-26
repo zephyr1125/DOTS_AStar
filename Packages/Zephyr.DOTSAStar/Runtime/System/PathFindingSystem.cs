@@ -18,13 +18,13 @@ namespace Zephyr.DOTSAStar.Runtime.System
 
         private struct OpenSetNode : IComparable<OpenSetNode>, IEquatable<OpenSetNode>
         {
-            public int2 Position;
+            public int Id;
             public float Priority;
 
-            public OpenSetNode(int2 position, float priority)
+            public OpenSetNode(int id, float priority)
             {
-                this.Position = position;
-                this.Priority = priority;
+                Id = id;
+                Priority = priority;
             }
             
             public int CompareTo(OpenSetNode other)
@@ -34,7 +34,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
 
             public bool Equals(OpenSetNode other)
             {
-                return Position.Equals(other.Position);
+                return Id.Equals(other.Id);
             }
         }
         
@@ -57,7 +57,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
             public NativeArray<AStarNode> AStarNodes;
             
             [ReadOnly][DeallocateOnJobCompletion]
-            public NativeArray<int2> NeighboursOffset;
+            public NativeArray<int> NeighboursOffset;
 
             public EntityCommandBuffer.Concurrent CmdBuffer;
 
@@ -77,30 +77,27 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 }
                 
                 // Path finding
-                var startPos = request.StartPos;
-                var goalPos = request.GoalPos;
+                var startId = request.StartId;
+                var goalId = request.GoalId;
                 
-                openSet.Push(new MinHeapNode(startPos, 0));
-                costCount[Utils.PosToId(startPos)] = 0;
+                openSet.Push(new MinHeapNode(startId, 0));
+                costCount[startId] = 0;
 
                 var currentId = -1;
                 while (IterationLimit>0 && openSet.HasNext())
                 {
                     var currentNode = openSet[openSet.Pop()];
-                    var currentPos = currentNode.Position;
-                    currentId = Utils.PosToId(currentPos);
-                    if (currentId == Utils.PosToId(goalPos))
+                    currentId = currentNode.Id;
+                    if (currentId == goalId)
                     {
                         break;
                     }
                     
-                    var neighboursPos = new NativeList<int2>(4, Allocator.Temp);
-                    GetNeighbours(currentPos, ref neighboursPos, NeighboursOffset);
+                    var neighboursId = new NativeList<int>(4, Allocator.Temp);
+                    GetNeighbours(currentId, ref neighboursId, NeighboursOffset);
 
-                    foreach (var neighbourPos in neighboursPos)
+                    foreach (var neighbourId in neighboursId)
                     {
-                        var neighbourId = Utils.PosToId(neighbourPos);
-                        
                         //if cost == -1 means obstacle, skip
                         if (AStarNodes[neighbourId].Cost == -1) continue;
 
@@ -111,40 +108,40 @@ namespace Zephyr.DOTSAStar.Runtime.System
                         //not better, skip
                         if (costCount[neighbourId] <= newCost) continue;
                         
-                        var priority = newCost + Heuristic(neighbourPos, goalPos);
-                        openSet.Push(new MinHeapNode(neighbourPos, priority));
+                        var priority = newCost + Heuristic(neighbourId, goalId);
+                        openSet.Push(new MinHeapNode(neighbourId, priority));
                         cameFrom[neighbourId] = currentId;
                         costCount[neighbourId] = newCost;
                     }
 
                     IterationLimit--;
-                    neighboursPos.Dispose();
+                    neighboursId.Dispose();
                 }
                 
                 //Construct path
                 var pathEntity = CmdBuffer.CreateEntity(index);
                 var buffer = CmdBuffer.AddBuffer<PathRoute>(index, pathEntity);
-                var nodePos = goalPos;
-                while (StepsLimit>0 && !nodePos.Equals(startPos))
+                var nodeId = goalId;
+                while (StepsLimit>0 && !nodeId.Equals(startId))
                 {
-                    buffer.Add(new PathRoute {Position = nodePos});
-                    nodePos = Utils.IdToPos(cameFrom[Utils.PosToId(nodePos)]);
+                    buffer.Add(new PathRoute {Id = nodeId});
+                    nodeId = cameFrom[nodeId];
                     StepsLimit--;
                 }
                 
                 //Construct Result
                 var success = true;
                 var log = new NativeString64("Path finding success");
-                if (!openSet.HasNext() && currentId != Utils.PosToId(goalPos))
+                if (!openSet.HasNext() && currentId != goalId)
                 {
                     success = false;
                     log = new NativeString64("Out of openset");
                 }
-                if (IterationLimit <= 0 && currentId != Utils.PosToId(goalPos))
+                if (IterationLimit <= 0 && currentId != goalId)
                 {
                     success = false;
                     log = new NativeString64("Iteration limit reached");
-                }else if (StepsLimit <= 0 && !nodePos.Equals(startPos))
+                }else if (StepsLimit <= 0 && !nodeId.Equals(startId))
                 {
                     success = false;
                     log = new NativeString64("Step limit reached");
@@ -164,21 +161,24 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 costCount.Dispose();
             }
 
-            private static void GetNeighbours(int2 pos, ref NativeList<int2> neighboursPos, NativeArray<int2> neighboursOffset)
+            private static void GetNeighbours(int id, ref NativeList<int> neighboursId, NativeArray<int> neighboursOffset)
             {
                 foreach (var offset in neighboursOffset)
                 {
-                    var newPos = pos + offset;
+                    var newId = id + offset;
+                    var newPos = Utils.IdToPos(id + offset);
                     if (newPos.x < 0 || newPos.x >= Const.MapWidth) continue;
                     if (newPos.y < 0 || newPos.y >= Const.MapHeight) continue;
-                    neighboursPos.Add(newPos);
+                    neighboursId.Add(newId);
                 }
             }
 
-            private static float Heuristic(int2 posA, int2 posB)
+            private static float Heuristic(int startId, int endId)
             {
-                var x   = posB.x - posA.x;
-                var y   = posB.y - posA.y;
+                var startPos = Utils.IdToPos(startId);
+                var endPos = Utils.IdToPos(endId);
+                var x   = endPos.x - startPos.x;
+                var y   = endPos.y - startPos.y;
                 var sqr = x * x + y * y;
                 return sqr;
             }
@@ -205,12 +205,12 @@ namespace Zephyr.DOTSAStar.Runtime.System
             var sortNodesHandle = aStarNodes.SortJob(prepareMapHandle);
             
             //Path Finding
-            var neighbourOffset = new NativeArray<int2>(4, Allocator.TempJob)
+            var neighbourOffset = new NativeArray<int>(4, Allocator.TempJob)
             {
-                [0] = new int2(-1, 0),
-                [1] = new int2(0, 1),
-                [2] = new int2(1, 0),
-                [3] = new int2(0, -1),
+                [0] = -1,
+                [1] = Const.MapWidth,
+                [2] = 1,
+                [3] = -Const.MapWidth,
             };
 
             var pathFindingJob = new PathFindingJob

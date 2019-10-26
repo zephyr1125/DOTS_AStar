@@ -5,6 +5,6 @@ namespace Zephyr.DOTSAStar.Runtime.Component
 {
     public struct PathRoute : IBufferElementData
     {
-        public int2 Position;
+        public int Id;
     }
 }

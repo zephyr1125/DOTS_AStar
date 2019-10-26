@@ -25,12 +25,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8b532829dc44eca09e3667d479aa96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position:
-    x: 0
-    y: 0
+  id: 0
   nodeTypeName: empty
   pathPart: 0
-  costCount: 0
   NodeDefine: {fileID: 11400000, guid: 9a7125d523564c040a02de18a0ed2979, type: 2}
   nodeTypeRenderer: {fileID: 8257217900139764928}
   pathMaterials:

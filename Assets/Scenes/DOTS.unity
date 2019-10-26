@@ -10413,6 +10413,17 @@ PrefabInstance:
       propertyPath: terrainType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4971118543715477640, guid: 5f8626b37b74e314b844746faae1d2af,
+        type: 3}
+      propertyPath: NodeDefine
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c8700d7069185745a738e755a9a60e3,
+        type: 2}
+    - target: {fileID: 4971118543715477640, guid: 5f8626b37b74e314b844746faae1d2af,
+        type: 3}
+      propertyPath: nodeTypeName
+      value: obstacle
+      objectReference: {fileID: 0}
     - target: {fileID: 8257217900139764934, guid: 5f8626b37b74e314b844746faae1d2af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10472,7 +10483,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 725ea2318d6291447ba8789ea07b6162, type: 2}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f8626b37b74e314b844746faae1d2af, type: 3}
 --- !u!4 &1303956714 stripped
