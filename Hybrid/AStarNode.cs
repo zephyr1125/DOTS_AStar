@@ -11,16 +11,13 @@ namespace Zephyr.DOTSAStar.Hybrid
 {
     public class AStarNode : MonoBehaviour, IConvertGameObjectToEntity
     {
-        public int2 position;
+        public int id;
         
         [ReadOnly]
         public string nodeTypeName;
 
         [OnValueChanged("OnChangePathPart")]
         public PathPart pathPart;
-
-        [HideInInspector]
-        public int costCount;
 
 #if UNITY_EDITOR
         [AssetList(CustomFilterMethod = "CustomFilter")]
@@ -72,9 +69,9 @@ namespace Zephyr.DOTSAStar.Hybrid
         
         
 
-        public void Init(int x, int y)
+        public void Init(int id)
         {
-            position = new int2(x, y);
+            this.id = id;
             nodeTypeName = "empty";
         }
 
@@ -93,7 +90,7 @@ namespace Zephyr.DOTSAStar.Hybrid
             var define = DefineCenter.Instance().GetDefine(nodeTypeName).GetComponent<PathFindingNode>();
             dstManager.AddComponentData(entity, new Runtime.Component.AStarNode
             {
-                Position = position,
+                Id = id,
                 Cost = define.Cost
             });
         }

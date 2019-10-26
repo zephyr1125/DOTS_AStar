@@ -161,14 +161,14 @@ namespace Zephyr.DOTSAStar.Runtime.Lib
  
     public struct MinHeapNode
     {
-        public MinHeapNode(int2 position, float expectedCost)
+        public MinHeapNode(int id, float expectedCost)
         {
-            Position = position;
+            Id = id;
             ExpectedCost = expectedCost;
             Next = -1;
         }
  
-        public int2 Position { get; } // TODO to position
+        public int Id { get; } // TODO to position
         public float ExpectedCost { get; }
         public int Next { get; set; }
     }
