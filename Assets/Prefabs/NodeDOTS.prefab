@@ -29,6 +29,15 @@ MonoBehaviour:
   nodeTypeName: empty
   pathPart: 0
   NodeDefine: {fileID: 11400000, guid: 9a7125d523564c040a02de18a0ed2979, type: 2}
+  nodeTypeMaterials:
+    keyData:
+    - empty
+    - obstacle
+    - swamp
+    valueData:
+    - {fileID: 2100000, guid: 988727eef239d324f8c5626663323c3f, type: 2}
+    - {fileID: 2100000, guid: 725ea2318d6291447ba8789ea07b6162, type: 2}
+    - {fileID: 2100000, guid: 35c73276abf4c9b44b5cbbd894b4b277, type: 2}
   nodeTypeRenderer: {fileID: 8257217900139764928}
   pathMaterials:
   - {fileID: 2100000, guid: 5105cf542af90fe4699c74ab4b92cc02, type: 2}

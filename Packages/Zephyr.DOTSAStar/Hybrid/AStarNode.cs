@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Zephyr.DOTSAStar.Runtime;
 using Sirenix.OdinInspector;
@@ -6,6 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Zephyr.Define.Runtime;
 using Zephyr.DOTSAStar.Runtime.DefineComponent;
+using Zephyr.DOTSAStar.Runtime.Lib;
 
 namespace Zephyr.DOTSAStar.Hybrid
 {
@@ -44,7 +46,7 @@ namespace Zephyr.DOTSAStar.Hybrid
             var nodeTypeDefines = DefineCenter.Instance().GetDefinesOf<PathFindingNode>();
             
             if(nodeTypeMaterials == null)
-                nodeTypeMaterials = new Dictionary<string, Material>(nodeTypeDefines.Length);
+                nodeTypeMaterials = new NodeTypeMaterialDictionary();
             
             foreach (var nodeTypeDefine in nodeTypeDefines)
             {
@@ -57,7 +59,7 @@ namespace Zephyr.DOTSAStar.Hybrid
         
         [ShowInInspector]
         [InfoBox("增减NodeType后点击按钮刷新材质库")]
-        public Dictionary<string, Material> nodeTypeMaterials;
+        public NodeTypeMaterialDictionary nodeTypeMaterials;
 
         public MeshRenderer nodeTypeRenderer;
 
@@ -95,4 +97,7 @@ namespace Zephyr.DOTSAStar.Hybrid
             });
         }
     }
+    
+    [Serializable]
+    public class NodeTypeMaterialDictionary : UnitySerializedDictionary<string, Material> { }
 }
