@@ -5,7 +5,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 using AStarNode = Zephyr.DOTSAStar.Runtime.Component.AStarNode;
 
 namespace Zephyr.DOTSAStar.Runtime.System
@@ -14,7 +13,8 @@ namespace Zephyr.DOTSAStar.Runtime.System
     public class PathFindingSystem : JobComponentSystem
     {
         private int _mapSize;
-        private EntityCommandBufferSystem _cmdBuffer;
+        private EntityCommandBufferSystem _resultECB;
+        private EntityCommandBufferSystem _cleanECB;
 
         private struct OpenSetNode : IComparable<OpenSetNode>, IEquatable<OpenSetNode>
         {
@@ -60,7 +60,9 @@ namespace Zephyr.DOTSAStar.Runtime.System
             [ReadOnly][DeallocateOnJobCompletion]
             public NativeArray<int> NeighboursOffset;
 
-            public EntityCommandBuffer.Concurrent CmdBuffer;
+            public EntityCommandBuffer.Concurrent ResultECB;
+
+            public EntityCommandBuffer.Concurrent CleanECB;
 
             public int IterationLimit;
 
@@ -120,7 +122,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 }
                 
                 //Construct path
-                var buffer = CmdBuffer.AddBuffer<PathRoute>(index, entity);
+                var buffer = ResultECB.AddBuffer<PathRoute>(index, entity);
                 var nodeId = goalId;
                 while (StepsLimit>0 && !nodeId.Equals(startId))
                 {
@@ -146,11 +148,14 @@ namespace Zephyr.DOTSAStar.Runtime.System
                     success = false;
                     log = new NativeString64("Step limit reached");
                 }
-                CmdBuffer.AddComponent(index, entity, new PathResult
+                ResultECB.AddComponent(index, entity, new PathResult
                 {
                     Success = success,
                     Log = log
                 });
+                
+                //Clean result at end of simulation
+                CleanECB.DestroyEntity(index, entity);
                 
                 //Clear
                 openSet.Dispose();
@@ -184,7 +189,8 @@ namespace Zephyr.DOTSAStar.Runtime.System
         protected override void OnCreate()
         {
             _mapSize = Const.MapWidth * Const.MapHeight;
-            _cmdBuffer = World.Active.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
+            _resultECB = World.Active.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
+            _cleanECB = World.Active.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -215,13 +221,14 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 MapSize = _mapSize,
                 AStarNodes = aStarNodes,
                 NeighboursOffset = neighbourOffset,
-                CmdBuffer = _cmdBuffer.CreateCommandBuffer().ToConcurrent(),
+                ResultECB = _resultECB.CreateCommandBuffer().ToConcurrent(),
+                CleanECB = _cleanECB.CreateCommandBuffer().ToConcurrent(),
                 IterationLimit = 2000,
                 StepsLimit = 1000
             };
             
             var pathFindingHandle = pathFindingJob.Schedule(this, sortNodesHandle);
-            _cmdBuffer.AddJobHandleForProducer(pathFindingHandle);
+            _resultECB.AddJobHandleForProducer(pathFindingHandle);
             return pathFindingHandle;
         }
     }
