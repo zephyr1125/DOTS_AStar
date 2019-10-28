@@ -51,11 +51,7 @@ namespace Zephyr.DOTSAStar.Runtime.Lib
             nativeMinHeap.m_length = 0;
  
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
-#if UNITY_2018_3_OR_NEWER
             DisposeSentinel.Create(out nativeMinHeap.m_Safety, out nativeMinHeap.m_DisposeSentinel, 1, allocator);
-#else
-            DisposeSentinel.Create(out nativeMinHeap.m_Safety, out nativeMinHeap.m_DisposeSentinel, 1);
-#endif
 #endif
  
  
@@ -77,17 +73,14 @@ namespace Zephyr.DOTSAStar.Runtime.Lib
             AtomicSafetyHandle.CheckReadAndThrow(m_Safety);
 #endif
  
-            UnsafeUtility.WriteArrayElement(m_Buffer, m_length, node);
-            m_length += 1;
- 
             if (m_head < 0)
             {
-                m_head = m_length - 1;
+                m_head = m_length;
             }
             else if (node.ExpectedCost < this[m_head].ExpectedCost)
             {
                 node.Next = m_head;
-                m_head = m_length - 1;
+                m_head = m_length;
             }
             else
             {
@@ -101,8 +94,13 @@ namespace Zephyr.DOTSAStar.Runtime.Lib
                 }
  
                 node.Next = current.Next;
-                current.Next = m_length - 1;
+                current.Next = m_length;
+ 
+                UnsafeUtility.WriteArrayElement(m_Buffer, currentPtr, current);
             }
+ 
+            UnsafeUtility.WriteArrayElement(m_Buffer, m_length, node);
+            m_length += 1;
         }
  
         public int Pop()

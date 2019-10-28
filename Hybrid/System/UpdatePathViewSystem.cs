@@ -25,6 +25,7 @@ namespace Zephyr.DOTSAStar.Hybrid.System
                 ComponentType.ReadOnly<AStarNodePathView>(),
                 ComponentType.ReadWrite<RenderMesh>());
             _pathResultQuery = GetEntityQuery(
+                ComponentType.ReadOnly<PathFindingRequest>(),
                 ComponentType.ReadOnly<PathResult>(),
                 ComponentType.ReadOnly<PathRoute>());
         }
@@ -43,31 +44,39 @@ namespace Zephyr.DOTSAStar.Hybrid.System
             var viewEntities = _pathViewQuery.ToEntityArray(Allocator.TempJob);
             var viewComponents =
                 _pathViewQuery.ToComponentDataArray<AStarNodePathView>(Allocator.TempJob);
-            
-            DynamicBuffer<PathRoute>[] routeBuffers = new DynamicBuffer<PathRoute>[resultEntities.Length];
-            for (var i = 0; i < resultEntities.Length; i++)
-            {
-                
-            }
 
-            for (var i = 0; i < viewEntities.Length; i++)
+            var resultRequests =
+                _pathResultQuery.ToComponentDataArray<PathFindingRequest>(Allocator.TempJob);
+
+            for (var indexNode = 0; indexNode < viewEntities.Length; indexNode++)
             {
-                var pathEntity = viewEntities[i];
+                var pathEntity = viewEntities[indexNode];
                 var renderMesh = EntityManager.GetSharedComponentData<RenderMesh>(pathEntity);
                 
                 //reset material to empty
                 renderMesh.material = _pathMaterials[0];
                 
-                var nodeId = viewComponents[i].Id;
-                
-                foreach (var resultEntity in resultEntities)
+                var nodeId = viewComponents[indexNode].Id;
+
+                for (var indexResult = 0; indexResult < resultEntities.Length; indexResult++)
                 {
-                    var routeBuffer = EntityManager.GetBuffer<PathRoute>(resultEntity);
-                    foreach (var pathRoute in routeBuffer)
+                    //start node
+                    var requestStartId = resultRequests[indexResult].StartId;
+                    if (nodeId == requestStartId)
                     {
+                        renderMesh.material =_pathMaterials[1];
+                        break;
+                    }
+                    
+                    //route node
+                    var routeBuffer = EntityManager.GetBuffer<PathRoute>(resultEntities[indexResult]);
+                    for (var indexRoute = 0; indexRoute < routeBuffer.Length; indexRoute++)
+                    {
+                        var pathRoute = routeBuffer[indexRoute];
                         if (pathRoute.Id == nodeId)
                         {
-                            renderMesh.material = _pathMaterials[2];
+                            renderMesh.material =
+                                indexRoute == 0 ? _pathMaterials[3] : _pathMaterials[2];
                         }
                     }
                 }
@@ -77,6 +86,7 @@ namespace Zephyr.DOTSAStar.Hybrid.System
 
             viewEntities.Dispose();
             viewComponents.Dispose();
+            resultRequests.Dispose();
             resultEntities.Dispose();
         }
     }
