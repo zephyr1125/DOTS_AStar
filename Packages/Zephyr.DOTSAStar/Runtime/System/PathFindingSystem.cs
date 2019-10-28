@@ -5,6 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
 using AStarNode = Zephyr.DOTSAStar.Runtime.Component.AStarNode;
 
 namespace Zephyr.DOTSAStar.Runtime.System
@@ -167,11 +168,12 @@ namespace Zephyr.DOTSAStar.Runtime.System
             {
                 foreach (var offset in neighboursOffset)
                 {
-                    var newId = id + offset;
-                    var newPos = Utils.IdToPos(id + offset);
-                    if (newPos.x < 0 || newPos.x >= Const.MapWidth) continue;
-                    if (newPos.y < 0 || newPos.y >= Const.MapHeight) continue;
-                    neighboursId.Add(newId);
+                    var currentPos = Utils.IdToPos(id);
+                    var offsetPos = Utils.IdToPos(offset);
+                    var neighbourPos = currentPos+offsetPos;
+                    if (neighbourPos.x < 0 || neighbourPos.x >= Const.MapWidth) continue;
+                    if (neighbourPos.y < 0 || neighbourPos.y >= Const.MapHeight) continue;
+                    neighboursId.Add(Utils.PosToId(neighbourPos));
                 }
             }
 
