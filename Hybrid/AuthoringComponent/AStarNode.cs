@@ -1,18 +1,17 @@
 using System;
-using System.Collections.Generic;
-using Zephyr.DOTSAStar.Runtime;
 using Sirenix.OdinInspector;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 using Zephyr.Define.Runtime;
+using Zephyr.DOTSAStar.Runtime;
 using Zephyr.DOTSAStar.Runtime.DefineComponent;
 using Zephyr.DOTSAStar.Runtime.Lib;
 
-namespace Zephyr.DOTSAStar.Hybrid
+namespace Zephyr.DOTSAStar.Hybrid.AuthoringComponent
 {
     public class AStarNode : MonoBehaviour, IConvertGameObjectToEntity
     {
+        [ReadOnly]
         public int id;
         
         [ReadOnly]
@@ -46,7 +45,7 @@ namespace Zephyr.DOTSAStar.Hybrid
             var nodeTypeDefines = DefineCenter.Instance().GetDefinesOf<PathFindingNode>();
             
             if(nodeTypeMaterials == null)
-                nodeTypeMaterials = new NodeTypeMaterialDictionary();
+                nodeTypeMaterials = new MaterialDictionary();
             
             foreach (var nodeTypeDefine in nodeTypeDefines)
             {
@@ -59,7 +58,7 @@ namespace Zephyr.DOTSAStar.Hybrid
         
         [ShowInInspector]
         [InfoBox("增减NodeType后点击按钮刷新材质库")]
-        public NodeTypeMaterialDictionary nodeTypeMaterials;
+        public MaterialDictionary nodeTypeMaterials;
 
         public MeshRenderer nodeTypeRenderer;
 
@@ -75,6 +74,8 @@ namespace Zephyr.DOTSAStar.Hybrid
         {
             this.id = id;
             nodeTypeName = "empty";
+
+            transform.GetChild(0).GetComponent<NodePathView>().id = id;
         }
 
         public void OnChangePathPart()
@@ -99,5 +100,5 @@ namespace Zephyr.DOTSAStar.Hybrid
     }
     
     [Serializable]
-    public class NodeTypeMaterialDictionary : UnitySerializedDictionary<string, Material> { }
+    public class MaterialDictionary : UnitySerializedDictionary<string, Material> { }
 }
