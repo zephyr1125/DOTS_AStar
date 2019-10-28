@@ -10,11 +10,11 @@ using AStarNode = Zephyr.DOTSAStar.Runtime.Component.AStarNode;
 
 namespace Zephyr.DOTSAStar.Runtime.System
 {
-    [UpdateBefore(typeof(PathFindingECBuffer))]
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class PathFindingSystem : JobComponentSystem
     {
         private int _mapSize;
-        private PathFindingECBuffer _cmdBuffer;
+        private EntityCommandBufferSystem _cmdBuffer;
 
         private struct OpenSetNode : IComparable<OpenSetNode>, IEquatable<OpenSetNode>
         {
@@ -49,6 +49,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
         }
 
         [BurstCompile]
+        [ExcludeComponent(typeof(PathResult))]
         private struct PathFindingJob : IJobForEachWithEntity<PathFindingRequest>
         {
             public int MapSize;
@@ -119,8 +120,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 }
                 
                 //Construct path
-                var pathEntity = CmdBuffer.CreateEntity(index);
-                var buffer = CmdBuffer.AddBuffer<PathRoute>(index, pathEntity);
+                var buffer = CmdBuffer.AddBuffer<PathRoute>(index, entity);
                 var nodeId = goalId;
                 while (StepsLimit>0 && !nodeId.Equals(startId))
                 {
@@ -146,14 +146,11 @@ namespace Zephyr.DOTSAStar.Runtime.System
                     success = false;
                     log = new NativeString64("Step limit reached");
                 }
-                CmdBuffer.AddComponent(index, pathEntity, new PathResult
+                CmdBuffer.AddComponent(index, entity, new PathResult
                 {
                     Success = success,
                     Log = log
                 });
-                
-                //Remove request
-                CmdBuffer.DestroyEntity(index, entity);
                 
                 //Clear
                 openSet.Dispose();
@@ -187,7 +184,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
         protected override void OnCreate()
         {
             _mapSize = Const.MapWidth * Const.MapHeight;
-            _cmdBuffer = World.Active.GetOrCreateSystem<PathFindingECBuffer>();
+            _cmdBuffer = World.Active.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -228,6 +225,4 @@ namespace Zephyr.DOTSAStar.Runtime.System
             return pathFindingHandle;
         }
     }
-    
-    public class PathFindingECBuffer : EntityCommandBufferSystem{}
 }

@@ -3,3 +3,10 @@
 ## 使用步骤
 1. 创建Node Define定义所有Node类别及其Cost
 2. 使用Hybrid或者Pure方式保证在运行时ECS World下具有所有的AStarNode
+
+## 生命周期
+* 请在SimulationSystemGroup中进行PathFindingRequest的创建
+* PathFindingSystem将在下一帧的InitializationSystemGroup中执行，在EndInitializationECB里创建PathResult并附带在原PathRequest上。
+* 请在SimulationSystemGroup中对PathResult进行处理
+* PathResultCleanSystem会在LateSimulationSystemGroup中清理掉PathResult及其PathRequest
+* 总结：寻路至少有1帧延迟，对结果的处理只有1帧的时间窗口

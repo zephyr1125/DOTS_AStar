@@ -22,7 +22,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8257217900139764929}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d8b532829dc44eca09e3667d479aa96, type: 3}
+  m_Script: {fileID: 11500000, guid: 14b91b9db07d5994d99f2f06dcc0c5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
@@ -45,6 +45,19 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 59aa5c53304fa7e44a0672700f65c653, type: 2}
   - {fileID: 2100000, guid: 3e85cbc11c543ca439d17e557dd84533, type: 2}
   pathSpriteRender: {fileID: 1019466828779001071}
+--- !u!114 &4495654822718820931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8716795912268433090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34cf21fa1436c2489e0ea6c5ab9a80a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
 --- !u!1001 &1976882861264848804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -139,6 +152,12 @@ GameObject:
 --- !u!23 &8257217900139764928 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7636077002556709732, guid: 9bf85f278319e0e4898f5499213d089b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1976882861264848804}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8716795912268433090 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7176217518655766886, guid: 9bf85f278319e0e4898f5499213d089b,
     type: 3}
   m_PrefabInstance: {fileID: 1976882861264848804}
   m_PrefabAsset: {fileID: 0}

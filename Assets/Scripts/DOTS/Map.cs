@@ -1,9 +1,13 @@
+using System;
 using Sirenix.OdinInspector;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using Zephyr.Define.Runtime;
 using Zephyr.DOTSAStar.Hybrid;
+using Zephyr.DOTSAStar.Hybrid.AuthoringComponent;
+using Zephyr.DOTSAStar.Hybrid.System;
 using Zephyr.DOTSAStar.Runtime;
 using Zephyr.DOTSAStar.Runtime.DefineComponent;
 
@@ -16,9 +20,6 @@ namespace DOTS
     public class Map : MonoBehaviour
     {
         public GameObject nodePrefab;
-
-        [HideInInspector]
-        public AStarNode startNode;
         
         [Button]
         public void Generate()
@@ -43,6 +44,14 @@ namespace DOTS
                 }
             }
 #endif
+        }
+
+        private void Start()
+        {
+            var pathMaterials = nodePrefab.GetComponent<AStarNode>().pathMaterials;
+
+            var pathViewSystem = World.Active.GetOrCreateSystem<UpdatePathViewSystem>();
+            pathViewSystem.Init(pathMaterials);
         }
     }
 }
