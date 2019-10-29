@@ -40,7 +40,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
         }
         
         [BurstCompile]
-        private struct PrepareNodesJob : IJobForEachWithEntity<Component.AStarNode>
+        private struct PrepareNodesJob : IJobForEachWithEntity<AStarNode>
         {
             public NativeArray<AStarNode> AStarNodes;
             public void Execute(Entity entity, int index, [ReadOnly] ref AStarNode aStarNode)
@@ -57,9 +57,6 @@ namespace Zephyr.DOTSAStar.Runtime.System
             
             [ReadOnly][DeallocateOnJobCompletion]
             public NativeArray<AStarNode> AStarNodes;
-            
-            [ReadOnly][DeallocateOnJobCompletion]
-            public NativeArray<int> NeighboursOffset;
 
             public EntityCommandBuffer.Concurrent ResultECB;
 
@@ -98,7 +95,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                     }
                     
                     var neighboursId = new NativeList<int>(4, Allocator.Temp);
-                    GetNeighbours(currentId, ref neighboursId, NeighboursOffset);
+                    AStarNodes[currentId].GetNeighbours(ref neighboursId);
 
                     foreach (var neighbourId in neighboursId)
                     {
@@ -112,7 +109,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                         //not better, skip
                         if (costCount[neighbourId] <= newCost) continue;
                         
-                        var priority = newCost + Heuristic(neighbourId, goalId);
+                        var priority = newCost + AStarNodes[neighbourId].Heuristic(goalId);
                         openSet.Push(new MinHeapNode(neighbourId, priority));
                         cameFrom[neighbourId] = currentId;
                         costCount[neighbourId] = newCost;
@@ -163,29 +160,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 cameFrom.Dispose();
                 costCount.Dispose();
             }
-
-            private static void GetNeighbours(int id, ref NativeList<int> neighboursId, NativeArray<int> neighboursOffset)
-            {
-                foreach (var offset in neighboursOffset)
-                {
-                    var currentPos = Utils.IdToPos(id);
-                    var offsetPos = Utils.IdToPos(offset);
-                    var neighbourPos = currentPos+offsetPos;
-                    if (neighbourPos.x < 0 || neighbourPos.x >= Const.MapWidth) continue;
-                    if (neighbourPos.y < 0 || neighbourPos.y >= Const.MapHeight) continue;
-                    neighboursId.Add(Utils.PosToId(neighbourPos));
-                }
-            }
-
-            private static float Heuristic(int startId, int endId)
-            {
-                var startPos = Utils.IdToPos(startId);
-                var endPos = Utils.IdToPos(endId);
-                var x   = endPos.x - startPos.x;
-                var y   = endPos.y - startPos.y;
-                var sqr = x * x + y * y;
-                return sqr;
-            }
+            
         }
         
         protected override void OnCreate()
@@ -210,19 +185,11 @@ namespace Zephyr.DOTSAStar.Runtime.System
             var sortNodesHandle = aStarNodes.SortJob(prepareMapHandle);
             
             //Path Finding
-            var neighbourOffset = new NativeArray<int>(4, Allocator.TempJob)
-            {
-                [0] = -1,
-                [1] = Const.MapWidth,
-                [2] = 1,
-                [3] = -Const.MapWidth,
-            };
 
             var pathFindingJob = new PathFindingJob
             {
                 MapSize = _mapSize,
                 AStarNodes = aStarNodes,
-                NeighboursOffset = neighbourOffset,
                 ResultECB = _resultECB.CreateCommandBuffer().ToConcurrent(),
                 CleanECB = _cleanECB.CreateCommandBuffer().ToConcurrent(),
                 IterationLimit = 2000,
@@ -233,5 +200,14 @@ namespace Zephyr.DOTSAStar.Runtime.System
             _resultECB.AddJobHandleForProducer(pathFindingHandle);
             return pathFindingHandle;
         }
+        
+        public static readonly NativeArray<int> NeighbourOffset = 
+            new NativeArray<int>(4, Allocator.Persistent)
+            {
+                [0] = -1,
+                [1] = Const.MapWidth,
+                [2] = 1,
+                [3] = -Const.MapWidth,
+            };
     }
 }
