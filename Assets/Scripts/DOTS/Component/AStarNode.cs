@@ -1,12 +1,15 @@
 using System;
+using DOTS.System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Zephyr.DOTSAStar.Runtime;
+using Zephyr.DOTSAStar.Runtime.Component;
 using Zephyr.DOTSAStar.Runtime.System;
 
-namespace Zephyr.DOTSAStar.Runtime.Component
+namespace DOTS.Component
 {
-    public struct AStarNode : IComponentData, IComparable<AStarNode>, IHeuristic
+    public struct AStarNode : IComponentData, IComparable<AStarNode>, IPathFindingNode
     {
         public int Id;
         public int Cost;
@@ -15,7 +18,12 @@ namespace Zephyr.DOTSAStar.Runtime.Component
         {
             return Id.CompareTo(other.Id);
         }
-        
+
+        public int GetCost()
+        {
+            return Cost;
+        }
+
         public float Heuristic(int targetNodeId)
         {
             var startPos = Utils.IdToPos(Id);
@@ -28,7 +36,7 @@ namespace Zephyr.DOTSAStar.Runtime.Component
         
         public void GetNeighbours(ref NativeList<int> neighboursId)
         {
-            foreach (var offset in PathFindingSystem.NeighbourOffset)
+            foreach (var offset in AStarPathFindingSystem.NeighbourOffset)
             {
                 var currentPos = Utils.IdToPos(Id);
                 var offsetPos = Utils.IdToPos(offset);

@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Diagnostics;
 using Zephyr.DOTSAStar.Runtime.Component;
-using Utils = Zephyr.DOTSAStar.Runtime.Utils;
+using Utils = DOTS.Utils;
 
 namespace DOTS
 {

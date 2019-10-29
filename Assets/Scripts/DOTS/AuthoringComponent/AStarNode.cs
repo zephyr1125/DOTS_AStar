@@ -1,13 +1,14 @@
 using System;
+using Classic;
 using Sirenix.OdinInspector;
 using Unity.Entities;
 using UnityEngine;
 using Zephyr.Define.Runtime;
-using Zephyr.DOTSAStar.Runtime;
+using Zephyr.DOTSAStar.Hybrid.AuthoringComponent;
 using Zephyr.DOTSAStar.Runtime.DefineComponent;
 using Zephyr.DOTSAStar.Runtime.Lib;
 
-namespace Zephyr.DOTSAStar.Hybrid.AuthoringComponent
+namespace DOTS.AuthoringComponent
 {
     public class AStarNode : MonoBehaviour, IConvertGameObjectToEntity
     {
@@ -23,7 +24,7 @@ namespace Zephyr.DOTSAStar.Hybrid.AuthoringComponent
 #if UNITY_EDITOR
         [AssetList(CustomFilterMethod = "CustomFilter")]
         [OnValueChanged("UpdateNodeType")]
-        public Define.Runtime.Define NodeDefine;
+        public Zephyr.Define.Runtime.Define NodeDefine;
 
         private void UpdateNodeType()
         {
@@ -31,7 +32,7 @@ namespace Zephyr.DOTSAStar.Hybrid.AuthoringComponent
             nodeTypeRenderer.material = nodeTypeMaterials[nodeTypeName];
         }
         
-        protected virtual bool CustomFilter(Define.Runtime.Define define)
+        protected virtual bool CustomFilter(Zephyr.Define.Runtime.Define define)
         {
             return define.GetComponent<PathFindingNode>()!=null;
         }
@@ -91,7 +92,7 @@ namespace Zephyr.DOTSAStar.Hybrid.AuthoringComponent
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
             var define = DefineCenter.Instance().GetDefine(nodeTypeName).GetComponent<PathFindingNode>();
-            dstManager.AddComponentData(entity, new Runtime.Component.AStarNode
+            dstManager.AddComponentData(entity, new Component.AStarNode
             {
                 Id = id,
                 Cost = define.Cost

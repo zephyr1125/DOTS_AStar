@@ -5,17 +5,21 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
-using AStarNode = Zephyr.DOTSAStar.Runtime.Component.AStarNode;
 
 namespace Zephyr.DOTSAStar.Runtime.System
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public class PathFindingSystem : JobComponentSystem
+    public abstract class PathFindingSystem<T> : JobComponentSystem
+        where T : unmanaged, IComponentData, IPathFindingNode, IComparable<T>
     {
-        private int _mapSize;
+        private int _mapSize, _iterationLimit, _pathNodeLimit;
+        
         private EntityCommandBufferSystem _resultECB;
         private EntityCommandBufferSystem _cleanECB;
+
+        protected abstract int GetMapSize();
+        protected abstract int GetIterationLimit();
+        protected abstract int GetPathNodeLimit();
 
         private struct OpenSetNode : IComparable<OpenSetNode>, IEquatable<OpenSetNode>
         {
@@ -40,12 +44,12 @@ namespace Zephyr.DOTSAStar.Runtime.System
         }
         
         [BurstCompile]
-        private struct PrepareNodesJob : IJobForEachWithEntity<AStarNode>
+        private struct PrepareNodesJob : IJobForEachWithEntity<T>
         {
-            public NativeArray<AStarNode> AStarNodes;
-            public void Execute(Entity entity, int index, [ReadOnly] ref AStarNode aStarNode)
+            public NativeArray<T> Nodes;
+            public void Execute(Entity entity, int index, [ReadOnly] ref T node)
             {
-                AStarNodes[index] = aStarNode;
+                Nodes[index] = node;
             }
         }
 
@@ -56,7 +60,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
             public int MapSize;
             
             [ReadOnly][DeallocateOnJobCompletion]
-            public NativeArray<AStarNode> AStarNodes;
+            public NativeArray<T> Nodes;
 
             public EntityCommandBuffer.Concurrent ResultECB;
 
@@ -64,7 +68,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
 
             public int IterationLimit;
 
-            public int StepsLimit;
+            public int PathNodeLimit;
             
             public void Execute(Entity entity, int index, ref PathFindingRequest request)
             {
@@ -95,21 +99,21 @@ namespace Zephyr.DOTSAStar.Runtime.System
                     }
                     
                     var neighboursId = new NativeList<int>(4, Allocator.Temp);
-                    AStarNodes[currentId].GetNeighbours(ref neighboursId);
+                    Nodes[currentId].GetNeighbours(ref neighboursId);
 
                     foreach (var neighbourId in neighboursId)
                     {
                         //if cost == -1 means obstacle, skip
-                        if (AStarNodes[neighbourId].Cost == -1) continue;
+                        if (Nodes[neighbourId].GetCost() == -1) continue;
 
                         var currentCost = costCount[currentId] == int.MaxValue
                             ? 0
                             : costCount[currentId];
-                        var newCost = currentCost + AStarNodes[neighbourId].Cost;
+                        var newCost = currentCost + Nodes[neighbourId].GetCost();
                         //not better, skip
                         if (costCount[neighbourId] <= newCost) continue;
                         
-                        var priority = newCost + AStarNodes[neighbourId].Heuristic(goalId);
+                        var priority = newCost + Nodes[neighbourId].Heuristic(goalId);
                         openSet.Push(new MinHeapNode(neighbourId, priority));
                         cameFrom[neighbourId] = currentId;
                         costCount[neighbourId] = newCost;
@@ -122,11 +126,11 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 //Construct path
                 var buffer = ResultECB.AddBuffer<PathRoute>(index, entity);
                 var nodeId = goalId;
-                while (StepsLimit>0 && !nodeId.Equals(startId))
+                while (PathNodeLimit>0 && !nodeId.Equals(startId))
                 {
                     buffer.Add(new PathRoute {Id = nodeId});
                     nodeId = cameFrom[nodeId];
-                    StepsLimit--;
+                    PathNodeLimit--;
                 }
                 
                 //Construct Result
@@ -141,7 +145,7 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 {
                     success = false;
                     log = new NativeString64("Iteration limit reached");
-                }else if (StepsLimit <= 0 && !nodeId.Equals(startId))
+                }else if (PathNodeLimit <= 0 && !nodeId.Equals(startId))
                 {
                     success = false;
                     log = new NativeString64("Step limit reached");
@@ -165,7 +169,10 @@ namespace Zephyr.DOTSAStar.Runtime.System
         
         protected override void OnCreate()
         {
-            _mapSize = Const.MapWidth * Const.MapHeight;
+            _mapSize = GetMapSize();
+            _iterationLimit = GetIterationLimit();
+            _pathNodeLimit = GetPathNodeLimit();
+            
             _resultECB = World.Active.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
             _cleanECB = World.Active.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
@@ -173,41 +180,32 @@ namespace Zephyr.DOTSAStar.Runtime.System
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             //Prepare maps
-            var aStarNodes = new NativeArray<AStarNode>(_mapSize, Allocator.TempJob);
+            var nodes = new NativeArray<T>(_mapSize, Allocator.TempJob);
             
             var prepareNodesJob = new PrepareNodesJob
             {
-                AStarNodes = aStarNodes,
+                Nodes = nodes,
             };
 
             var prepareMapHandle = prepareNodesJob.Schedule(this, inputDeps);
 
-            var sortNodesHandle = aStarNodes.SortJob(prepareMapHandle);
+            var sortNodesHandle = nodes.SortJob(prepareMapHandle);
             
             //Path Finding
 
             var pathFindingJob = new PathFindingJob
             {
                 MapSize = _mapSize,
-                AStarNodes = aStarNodes,
+                Nodes = nodes,
                 ResultECB = _resultECB.CreateCommandBuffer().ToConcurrent(),
                 CleanECB = _cleanECB.CreateCommandBuffer().ToConcurrent(),
                 IterationLimit = 2000,
-                StepsLimit = 1000
+                PathNodeLimit = 1000
             };
             
             var pathFindingHandle = pathFindingJob.Schedule(this, sortNodesHandle);
             _resultECB.AddJobHandleForProducer(pathFindingHandle);
             return pathFindingHandle;
         }
-        
-        public static readonly NativeArray<int> NeighbourOffset = 
-            new NativeArray<int>(4, Allocator.Persistent)
-            {
-                [0] = -1,
-                [1] = Const.MapWidth,
-                [2] = 1,
-                [3] = -Const.MapWidth,
-            };
     }
 }

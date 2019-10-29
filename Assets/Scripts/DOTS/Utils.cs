@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-namespace Zephyr.DOTSAStar.Runtime
+namespace DOTS
 {
     public class Utils
     {

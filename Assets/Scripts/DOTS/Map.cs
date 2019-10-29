@@ -1,15 +1,10 @@
-using System;
+using DOTS.AuthoringComponent;
 using Sirenix.OdinInspector;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using Zephyr.Define.Runtime;
-using Zephyr.DOTSAStar.Hybrid;
-using Zephyr.DOTSAStar.Hybrid.AuthoringComponent;
 using Zephyr.DOTSAStar.Hybrid.System;
-using Zephyr.DOTSAStar.Runtime;
-using Zephyr.DOTSAStar.Runtime.DefineComponent;
 
 #if UNITY_EDITOR
 
