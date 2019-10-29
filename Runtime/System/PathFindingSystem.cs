@@ -5,6 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Zephyr.DOTSAStar.Runtime.ComponentInterface;
 
 namespace Zephyr.DOTSAStar.Runtime.System
 {
@@ -199,8 +200,8 @@ namespace Zephyr.DOTSAStar.Runtime.System
                 Nodes = nodes,
                 ResultECB = _resultECB.CreateCommandBuffer().ToConcurrent(),
                 CleanECB = _cleanECB.CreateCommandBuffer().ToConcurrent(),
-                IterationLimit = 2000,
-                PathNodeLimit = 1000
+                IterationLimit = _iterationLimit,
+                PathNodeLimit = _pathNodeLimit
             };
             
             var pathFindingHandle = pathFindingJob.Schedule(this, sortNodesHandle);

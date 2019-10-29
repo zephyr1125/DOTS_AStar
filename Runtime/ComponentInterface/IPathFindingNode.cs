@@ -1,6 +1,6 @@
 using Unity.Collections;
 
-namespace Zephyr.DOTSAStar.Runtime.Component
+namespace Zephyr.DOTSAStar.Runtime.ComponentInterface
 {
     public interface IPathFindingNode
     {
