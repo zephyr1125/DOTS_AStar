@@ -3,9 +3,7 @@ using DOTS.System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Zephyr.DOTSAStar.Runtime;
-using Zephyr.DOTSAStar.Runtime.Component;
-using Zephyr.DOTSAStar.Runtime.System;
+using Zephyr.DOTSAStar.Runtime.ComponentInterface;
 
 namespace DOTS.Component
 {

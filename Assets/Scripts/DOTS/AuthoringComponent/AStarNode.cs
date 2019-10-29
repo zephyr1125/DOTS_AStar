@@ -1,12 +1,12 @@
 using System;
 using Classic;
+using DOTS.Lib;
 using Sirenix.OdinInspector;
 using Unity.Entities;
 using UnityEngine;
 using Zephyr.Define.Runtime;
 using Zephyr.DOTSAStar.Hybrid.AuthoringComponent;
 using Zephyr.DOTSAStar.Runtime.DefineComponent;
-using Zephyr.DOTSAStar.Runtime.Lib;
 
 namespace DOTS.AuthoringComponent
 {
